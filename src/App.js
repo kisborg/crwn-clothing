@@ -25,7 +25,7 @@ function App({setCurrentUser, currentUser}) {
     });
     return () => unsubscribe();
   }
-  useEffect(onAuthStateChange, []);
+  useEffect(onAuthStateChange, [setCurrentUser]);
   return (
     <div>
       <Header />
