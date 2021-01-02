@@ -28,7 +28,7 @@ function Header({ currentUser, hidden }) {
         }
         <CartIcon />
       </div>
-      { hidden ? (<Cart />) : null }
+      { !hidden ? (<Cart />) : null }
     </div>
   )
 }
