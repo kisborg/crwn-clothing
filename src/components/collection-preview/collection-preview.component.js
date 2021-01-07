@@ -1,11 +1,15 @@
 import React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import './collection-preview.styles.scss';
 import CollectionItem from '../collection-item/collection-item.component';
 
-export default function CollectionPreview({ title, items }) {
+export default function CollectionPreview({ title, items, routeName }) {
+  const match = useRouteMatch();
+  const history = useHistory();
+
   return (
     <div className="collection-preview">
-      <h1 className="title">{title.toUpperCase()}</h1>
+      <h1 className="title" onClick={() => history.push(`${match.path}/${routeName}`)}>{title.toUpperCase()}</h1>
       <div className="preview">
         {
           items
