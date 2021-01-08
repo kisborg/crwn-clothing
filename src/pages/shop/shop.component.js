@@ -1,38 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { updateCollections } from '../../redux/shop/shop.actions';
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-import CollectionPage from '../collection/collection.component';
-import WithSpinner from '../../components/with-spinner/with-spinner.component';
-import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
+import { updateCollectionsStart } from '../../redux/shop/shop.actions';
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+import CollectionPageContainer from '../collection/collection.container';
 
-const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
-const CollectionPageWithSpinner = WithSpinner(CollectionPage);
-
-function ShopPage({ match, updateCollections }) {
-  const [isLoading, setIsLoading] = useState(true);
+function ShopPage({ match, updateCollectionsStart }) {
+  
   useEffect(() => {
-    const collectionRef = firestore.collection('collections');
-    let unsubscribe = collectionRef.onSnapshot(async (snapshot) => {
-      const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-      updateCollections(collectionsMap);
-      setIsLoading(false)
-    });
-
-    return () => unsubscribe();
-  }, [updateCollections]);
+    updateCollectionsStart()
+  }, [updateCollectionsStart]);
 
   return (
     <div>
-      <Route exact path ={`${match.path}`} render={(props) => <CollectionsOverviewWithSpinner isloading={isLoading} {...props} />} />
-      <Route path={`${match.path}/:collectionId`} render={(props) => <CollectionPageWithSpinner isLoading={isLoading} {...props} />} />
+      <Route exact path ={`${match.path}`} component={CollectionsOverviewContainer} />
+      <Route path={`${match.path}/:collectionId`} component={CollectionPageContainer} />
     </div>
   )
 }
 
+
 const mapDispatchToProps = dispatch => ({
-  updateCollections: collectionsMap => dispatch(updateCollections(collectionsMap))
+  updateCollectionsStart: () => dispatch(updateCollectionsStart())
 })
 
 export default connect(null, mapDispatchToProps)(ShopPage);
